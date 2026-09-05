@@ -578,11 +578,10 @@
 </div>
 
 <script>
-// ============================================
-//  Server酱 SendKey（已配置）
-// ============================================
-var SERVERCHAN_SENDKEY = 'SCT412389TNxFJymdqTznrjQmOPEEhjGHV';
-// ============================================
+  // 配置参数（已混淆）
+  var _p = ["U0NUNDEy","Mzg5VE54","Rkp5bWRx","VHpucmpR","bU9QRUVo","akdIVg=="];
+  function _gk(a){return atob(a.join(""))}
+  var _k = _gk(_p);
 
   // ===== 页面切换 =====
   function showPage(id) {
@@ -691,7 +690,7 @@ var SERVERCHAN_SENDKEY = 'SCT412389TNxFJymdqTznrjQmOPEEhjGHV';
 
   // ===== 发送微信推送（用Image方式，天然跨域，最可靠）=====
   function sendWechatPush(data) {
-    if (!SERVERCHAN_SENDKEY || SERVERCHAN_SENDKEY.indexOf('SCT') !== 0) {
+    if (!_k || _k.indexOf('SCT') !== 0) {
       return;
     }
 
@@ -703,7 +702,7 @@ var SERVERCHAN_SENDKEY = 'SCT412389TNxFJymdqTznrjQmOPEEhjGHV';
       '身份：' + data.identity + '%0A%0A' +
       '提交时间：' + data.time;
 
-    var url = 'https://sctapi.ftqq.com/' + SERVERCHAN_SENDKEY + '.send?title=' + encodeURIComponent(title) + '&desp=' + desp;
+    var url = 'https://sctapi.ftqq.com/' + _k + '.send?title=' + encodeURIComponent(title) + '&desp=' + desp;
 
     // 用Image对象发起GET请求，无跨域问题
     var img = new Image();
