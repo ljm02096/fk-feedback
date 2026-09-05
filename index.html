@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>皖北煤电集团总医院放疗中心患者意见反馈</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #fff;
+    min-height: 100vh;
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== 顶部标题 ===== */
+  .header {
+    padding: 32px 20px 24px;
+    border-bottom: 1px solid #eee;
+  }
+  .hospital-name {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 8px;
+  }
+  .survey-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.4;
+  }
+
+  /* ===== 题目区块 ===== */
+  .question {
+    padding: 24px 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .q-number {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 6px;
+  }
+  .q-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+  }
+  .required { color: #e54d42; margin-left: 2px; }
+
+  /* ===== 单选选项 ===== */
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 0;
+  }
+  .option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    margin-right: 12px;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option input[type="radio"]:checked {
+    border-color: #07C160;
+  }
+  .option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: #07C160;
+    border-radius: 50%;
+  }
+  .option span {
+    font-size: 15px;
+    color: #333;
+  }
+
+  /* ===== 输入框 ===== */
+  .input-field {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fff;
+  }
+  .input-field:focus {
+    border-color: #07C160;
+  }
+  .input-field::placeholder {
+    color: #bbb;
+  }
+  textarea.input-field {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  /* ===== 错误提示 ===== */
+  .error-msg {
+    color: #e54d42;
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* ===== 提交按钮 ===== */
+  .submit-area {
+    padding: 24px 20px 40px;
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #07C160;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .submit-btn:active { opacity: 0.8; }
+  .submit-btn:disabled {
+    background: #a8e6c3;
+    cursor: not-allowed;
+  }
+
+  /* ===== 成功页 ===== */
+  .success-page {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 24px;
+    background: #07C160;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .success-icon svg { width: 36px; height: 36px; }
+  .success-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+  .success-desc {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.8;
+  }
+
+  /* ===== 底部链接 ===== */
+  .footer-links {
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+  }
+  .footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* ===== 管理页 ===== */
+  .admin-page { padding: 20px; }
+  .admin-section {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .admin-section h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+  }
+  .admin-section p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+  .admin-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #07C160;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-top: 8px;
+  }
+  .admin-btn.secondary {
+    background: #f0f0f0;
+    color: #333;
+  }
+  .qrcode-box {
+    text-align: center;
+    padding: 10px 0;
+  }
+  /* ===== 二维码海报（参考图样式）===== */
+  .qr-poster {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .qr-poster-top {
+    background: linear-gradient(180deg, #8fd4cf 0%, #6eb8b3 100%);
+    padding: 36px 20px 28px;
+    position: relative;
+    text-align: center;
+  }
+  .qr-poster-wave {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    height: 30px;
+    opacity: 0.5;
+  }
+  .qr-poster-wave svg { width: 100%; height: 100%; }
+  .qr-poster-cross {
+    position: absolute;
+    color: #fff;
+    opacity: 0.85;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .qr-poster-cross.c1 { top: 30px; left: 30px; }
+  .qr-poster-cross.c2 { top: 22px; right: 40px; font-size: 22px; }
+  .qr-poster-cross.c3 { top: 60px; right: 60px; font-size: 18px; }
+  .qr-poster-hospital {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .qr-poster-title {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+  .qr-poster-slogan {
+    position: relative;
+    z-index: 1;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .qr-poster-middle {
+    background: #e8f4f3;
+    padding: 24px 20px;
+  }
+  .qr-poster-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 20px 20px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .qr-poster-card-title {
+    color: #4a9d97;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .qr-poster-card-img {
+    width: 220px;
+    height: 220px;
+    margin: 0 auto;
+    display: block;
+  }
+  .qr-poster-tags {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .qr-poster-tag {
+    padding: 6px 20px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .qr-poster-tag.green { background: #6abf69; }
+  .qr-poster-tag.red { background: #d9776b; }
+  .qr-poster-tag.blue { background: #6b9bd9; }
+  .qr-poster-bottom {
+    background: #e8f4f3;
+    padding: 0 20px 28px;
+    text-align: center;
+  }
+  .qr-poster-bottom-text1 {
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .qr-poster-bottom-text2 {
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .qr-poster-divider {
+    width: 80%;
+    height: 1px;
+    background: #c5ddd9;
+    margin: 0 auto 16px;
+  }
+  .qr-poster-footer {
+    color: #888;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .url-input-row {
+    margin-bottom: 16px;
+  }
+  .url-input-row label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  .url-input-row input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+  }
+  .url-input-row input:focus {
+    border-color: #4a9d97;
+  }
+  .url-tip {
+    font-size: 12px;
+    color: #f59e0b;
+    margin-top: 6px;
+    display: none;
+  }
+  .url-tip.show { display: block; }
+  .back-link {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: #07C160;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .status-ok { color: #07C160; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ===== 问卷页 ===== -->
+  <div id="surveyPage" class="page active">
+    <div class="header">
+      <div class="hospital-name">皖北煤电集团总医院 · 放疗中心</div>
+      <div class="survey-title">患者意见反馈</div>
+    </div>
+
+    <form id="feedbackForm">
+      <!-- 第1题 -->
+      <div class="question">
+        <div class="q-number">第1题</div>
+        <div class="q-title">您想反馈的类型是？<span class="required">*</span></div>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="feedbackType" value="表扬工作人员">
+            <span>表扬工作人员</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="feedbackType" value="吐槽/投诉">
+            <span>吐槽/投诉</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="feedbackType" value="提出意见建议">
+            <span>提出意见建议</span>
+          </label>
+        </div>
+        <div class="error-msg" id="err-type">请选择反馈类型</div>
+      </div>
+
+      <!-- 第2题 -->
+      <div class="question">
+        <div class="q-number">第2题</div>
+        <div class="q-title">涉及的工作人员班次</div>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="shift" value="加速器1室上午">
+            <span>加速器1室上午</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="shift" value="加速器1室中下班">
+            <span>加速器1室中下班</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="shift" value="加速器2室、后装、制模">
+            <span>加速器2室、后装、制模</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 第3题 -->
+      <div class="question">
+        <div class="q-number">第3题</div>
+        <div class="q-title">请详细描述您的反馈内容<span class="required">*</span></div>
+        <textarea class="input-field" id="content" placeholder="请输入您的反馈内容..."></textarea>
+        <div class="error-msg" id="err-content">请填写反馈内容</div>
+      </div>
+
+      <!-- 第4题 -->
+      <div class="question">
+        <div class="q-number">第4题</div>
+        <div class="q-title">您的联系方式（严格保密，方便回复）<span class="required">*</span></div>
+        <input type="tel" class="input-field" id="contact" placeholder="请输入11位手机号" maxlength="11" inputmode="numeric">
+        <div class="error-msg" id="err-contact">请输入正确的11位手机号</div>
+      </div>
+
+      <!-- 第5题 -->
+      <div class="question">
+        <div class="q-number">第5题</div>
+        <div class="q-title">您的身份</div>
+        <div class="options">
+          <label class="option">
+            <input type="radio" name="identity" value="患者本人">
+            <span>患者本人</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="identity" value="患者家属">
+            <span>患者家属</span>
+          </label>
+          <label class="option">
+            <input type="radio" name="identity" value="其他">
+            <span>其他</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="submit-area">
+        <button type="submit" class="submit-btn" id="submitBtn">提交反馈</button>
+      </div>
+    </form>
+
+    <div class="footer-links">
+      <a onclick="goAdmin()">管理入口</a>
+    </div>
+  </div>
+
+  <!-- ===== 成功页 ===== -->
+  <div id="successPage" class="page success-page">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="success-title">提交成功</div>
+    <div class="success-desc">
+      感谢您的反馈！<br>
+      我们已收到您的意见，将尽快处理并回复。<br>
+      您的联系方式将严格保密。
+    </div>
+  </div>
+
+  <!-- ===== 管理页 ===== -->
+  <div id="adminPage" class="page admin-page">
+    <a class="back-link" onclick="goSurvey()">&larr; 返回问卷</a>
+
+    <div class="admin-section">
+      <h3>反馈二维码海报</h3>
+      <p>部署到服务器后，在下方填写线上访问地址，即可生成可扫码的二维码海报。截图或打印后张贴在放疗中心。</p>
+      <div class="url-input-row">
+        <label>问卷线上地址（部署后填写）</label>
+        <input type="text" id="qrUrlInput" placeholder="例如：https://www.wbmy.com.cn/feedback.html" oninput="updateQrcode()">
+        <div class="url-tip" id="urlTip">当前为本地文件预览，二维码无法扫码，请部署后填写线上地址</div>
+      </div>
+      <div class="qrcode-box">
+        <div class="qr-poster">
+          <!-- 顶部青绿区域 -->
+          <div class="qr-poster-top">
+            <div class="qr-poster-wave">
+              <svg viewBox="0 0 400 30" preserveAspectRatio="none">
+                <path d="M0,15 Q25,5 50,15 T100,15 T150,15 T200,15 T250,15 T300,15 T350,15 T400,15" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+                <path d="M0,20 Q25,10 50,20 T100,20 T150,20 T200,20 T250,20 T300,20 T350,20 T400,20" fill="none" stroke="#fff" stroke-width="1" opacity="0.4"/>
+              </svg>
+            </div>
+            <div class="qr-poster-cross c1">+</div>
+            <div class="qr-poster-cross c2">+</div>
+            <div class="qr-poster-cross c3">+</div>
+            <div class="qr-poster-hospital">皖北煤电集团总医院</div>
+            <div class="qr-poster-title">放疗中心 · 患者意见反馈</div>
+            <div class="qr-poster-slogan">您的声音，是我们进步的动力</div>
+          </div>
+          <!-- 中间二维码卡片 -->
+          <div class="qr-poster-middle">
+            <div class="qr-poster-card">
+              <div class="qr-poster-card-title">扫码填写反馈</div>
+              <img id="qrcodeImg" class="qr-poster-card-img" src="" alt="反馈二维码">
+              <div class="qr-poster-tags">
+                <span class="qr-poster-tag green">表扬</span>
+                <span class="qr-poster-tag red">吐槽</span>
+                <span class="qr-poster-tag blue">建议</span>
+              </div>
+            </div>
+          </div>
+          <!-- 底部说明 -->
+          <div class="qr-poster-bottom">
+            <div class="qr-poster-bottom-text1">微信扫码直接打开，匿名提交</div>
+            <div class="qr-poster-bottom-text2">我们承诺严格保密，认真对待每一条反馈</div>
+            <div class="qr-poster-divider"></div>
+            <div class="qr-poster-footer">皖北煤电集团总医院放疗中心</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>微信推送</h3>
+      <p>推送状态：<span class="status-ok">已配置</span></p>
+      <p>患者提交反馈后，你的微信会立刻收到通知，包含反馈类型、班次、内容、联系方式等完整信息。</p>
+      <button class="admin-btn" onclick="testPush()">发送测试消息</button>
+    </div>
+
+    <div class="admin-section">
+      <h3>部署说明</h3>
+      <p>本文件是纯静态 HTML，无需后端，部署到任意 Web 服务器即可：</p>
+      <p>1. 将本文件上传到医院官网、任意静态托管平台或院内服务器</p>
+      <p>2. 访问部署后的地址，在本管理页获取二维码</p>
+      <p>3. 患者微信扫码即可填写，提交后微信实时收到通知</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================
+//  Server酱 SendKey（已配置）
+// ============================================
+var SERVERCHAN_SENDKEY = 'SCT412389TNxFJymdqTznrjQmOPEEhjGHV';
+// ============================================
+
+  // ===== 页面切换 =====
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function goSurvey() { showPage('surveyPage'); }
+  function goAdmin() {
+    showPage('adminPage');
+    var input = document.getElementById('qrUrlInput');
+    var currentUrl = window.location.origin + window.location.pathname;
+    // 如果是线上http/https地址，自动填入
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      input.value = currentUrl;
+      document.getElementById('urlTip').classList.remove('show');
+    } else {
+      // 本地文件，提示用户部署后填写
+      document.getElementById('urlTip').classList.add('show');
+    }
+    updateQrcode();
+  }
+
+  function updateQrcode() {
+    var url = document.getElementById('qrUrlInput').value.trim();
+    var img = document.getElementById('qrcodeImg');
+    if (url && (url.indexOf('http://') === 0 || url.indexOf('https://') === 0)) {
+      // 医疗蓝色二维码：color=0ea5e9
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=4a9d97&bgcolor=ffffff&data=' + encodeURIComponent(url);
+    } else {
+      // 占位图
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=c5ddd9&bgcolor=f8fafc&data=' + encodeURIComponent('请先部署并填写线上地址');
+    }
+  }
+
+  // ===== 表单提交 =====
+  document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // 隐藏所有错误
+    document.querySelectorAll('.error-msg').forEach(function(el) { el.classList.remove('show'); });
+
+    var valid = true;
+
+    // 第1题校验
+    var type = document.querySelector('input[name="feedbackType"]:checked');
+    if (!type) {
+      document.getElementById('err-type').classList.add('show');
+      valid = false;
+    }
+
+    // 第3题校验
+    var content = document.getElementById('content').value.trim();
+    if (!content) {
+      document.getElementById('err-content').classList.add('show');
+      valid = false;
+    }
+
+    // 第4题手机号校验
+    var contact = document.getElementById('contact').value.trim();
+    var phoneReg = /^1[3-9]\d{9}$/;
+    if (!contact) {
+      document.getElementById('err-contact').textContent = '请输入联系方式';
+      document.getElementById('err-contact').classList.add('show');
+      valid = false;
+    } else if (!phoneReg.test(contact)) {
+      document.getElementById('err-contact').textContent = '请输入正确的11位手机号';
+      document.getElementById('err-contact').classList.add('show');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // 收集数据
+    var shift = document.querySelector('input[name="shift"]:checked');
+    var identity = document.querySelector('input[name="identity"]:checked');
+    var now = new Date();
+    var timeStr = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' ' +
+      String(now.getHours()).padStart(2, '0') + ':' +
+      String(now.getMinutes()).padStart(2, '0');
+
+    var data = {
+      type: type.value,
+      shift: shift ? shift.value : '未选择',
+      content: content,
+      contact: contact,
+      identity: identity ? identity.value : '未选择',
+      time: timeStr
+    };
+
+    // 提交按钮loading
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '提交中...';
+
+    // 推送微信
+    sendWechatPush(data);
+
+    // 1秒后显示成功页（给推送留时间）
+    setTimeout(function() {
+      showPage('successPage');
+    }, 1000);
+  });
+
+  // ===== 发送微信推送（用Image方式，天然跨域，最可靠）=====
+  function sendWechatPush(data) {
+    if (!SERVERCHAN_SENDKEY || SERVERCHAN_SENDKEY.indexOf('SCT') !== 0) {
+      return;
+    }
+
+    var title = '【放疗中心】新' + data.type + ' - ' + data.shift;
+    var desp = '反馈类型：' + data.type + '%0A%0A' +
+      '涉及班次：' + data.shift + '%0A%0A' +
+      '反馈内容：' + data.content + '%0A%0A' +
+      '联系方式：' + data.contact + '%0A%0A' +
+      '身份：' + data.identity + '%0A%0A' +
+      '提交时间：' + data.time;
+
+    var url = 'https://sctapi.ftqq.com/' + SERVERCHAN_SENDKEY + '.send?title=' + encodeURIComponent(title) + '&desp=' + desp;
+
+    // 用Image对象发起GET请求，无跨域问题
+    var img = new Image();
+    img.src = url;
+    img.onload = function() { console.log('推送成功'); };
+    img.onerror = function() { console.log('推送完成'); };
+  }
+
+  // ===== 测试推送 =====
+  function testPush() {
+    var testData = {
+      type: '测试消息',
+      shift: '测试班次',
+      content: '这是一条测试消息，如果你收到了，说明微信推送配置成功！',
+      contact: '13800138000',
+      identity: '测试',
+      time: new Date().toLocaleString()
+    };
+    sendWechatPush(testData);
+    alert('测试消息已发送，请查看微信');
+  }
+</script>
+</body>
+</html>
