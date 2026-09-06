@@ -486,10 +486,6 @@
         <button type="submit" class="submit-btn" id="submitBtn">提交反馈</button>
       </div>
     </form>
-
-    <div class="footer-links">
-      <a onclick="goAdmin()">管理入口</a>
-    </div>
   </div>
 
   <!-- ===== 成功页 ===== -->
@@ -591,15 +587,18 @@
   }
   function goSurvey() { showPage('surveyPage'); }
   function goAdmin() {
+    var pwd = prompt('请输入管理密码：');
+    if (pwd !== 'wbzyfl2024') {
+      alert('密码错误');
+      return;
+    }
     showPage('adminPage');
     var input = document.getElementById('qrUrlInput');
     var currentUrl = window.location.origin + window.location.pathname;
-    // 如果是线上http/https地址，自动填入
     if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
       input.value = currentUrl;
       document.getElementById('urlTip').classList.remove('show');
     } else {
-      // 本地文件，提示用户部署后填写
       document.getElementById('urlTip').classList.add('show');
     }
     updateQrcode();
@@ -723,6 +722,11 @@
     };
     sendWechatPush(testData);
     alert('测试消息已发送，请查看微信');
+  }
+
+  // 页面加载时检测URL hash，#admin 进入管理页
+  if (window.location.hash === '#admin') {
+    setTimeout(goAdmin, 300);
   }
 </script>
 </body>
